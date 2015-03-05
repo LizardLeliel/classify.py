@@ -29,23 +29,27 @@ def compressedSize(directoryName, fileName):
 
 # Find the normalized compressed file
 def normalizedCompressedDistance(directory1, file1, directory2, file2):
-    concatFile = "concat.txt"
+    # Initialize some things; mostly path names
+    concatFile = "concat"
     concatPath = "temp\\" + concatFile
     path1 = directory1 + "\\" + file1
     path2 = directory2 + "\\" + file2
 
-
+    # Make a concatenated file, windows style
     command = "copy /b " + path1 + "+" + path2 + " " + concatPath
     subp.call(command, shell = True)
 
+    # Calculate sizes
     compressedSize1 = compressedSize(directory1, file1)
     compressedSize2 = compressedSize(directory2, file2)
     totalCompressed = float(compressedSize("temp", concatFile))
 
+    # Calculate the distance
     return ((totalCompressed - min(compressedSize1, compressedSize2)) \
         /  max(compressedSize1, compressedSize2))
 
 # "main" function
+# ... Is there a better way to do -h? 
 if __name__ == "__main__":
     if ("-h" in sys.argv):
         print("\nSynopsis: winclassify.py -[vh] [-c classesDirectory] [-d" \
@@ -68,46 +72,66 @@ if __name__ == "__main__":
             + "The options are:\n" \
             + "\t-h Help (this file)\n" \
             + "\t-v Verbose (will print the processes performed)\n" \
-            + "\t-c Classes (the directory name for the 'class' directory\n" \
-            + "\t-d Data (the directory name for the 'data' directory")
-        exit(0)
+            + "\t-c Classes (the directory name for the 'class' directory -" \
+            + " must be followed by a directory name)\n" \
+            + "\t-d Data (the directory name for the 'data' directory - " \
+            + " must be followed by a directory name)")
+        sys.exit(0)
+
+    # If the user specified a classes directory for the program
+    if "-c" in sys.argv:
+        cOptionIndex = sys.argv.index("-c")
+        if cOptionIndex == len(sys.argv) - 1:
+            print("Error: option -c must be followed by a directory name" \
+                + " parameter (none found)")
+            sys.exit(1)
+
+        classDirectory = sys.argv[cOptionIndex + 1]
+    else:
+        classDirectory = "classes"
+
+    # If the user specified a data directory for the program
+    if "-d" in sys.argv:
+        cOptionIndex = sys.argv.index("-d")
+        if cOptionIndex == len(sys.argv) - 1:
+            print("Error: option -d must be followed by a directory name" \
+                + " parameter (none found)")
+            sys.exit(1)
+
+        dataDirectory = sys.argv[cOptionIndex + 1]
+    else:
+        dataDirectory = "data"
+
 
     # Open the directories
-    classList = os.listdir("classes")
-    dataList  = os.listdir("data")
+    classList = os.listdir(classDirectory)
+    dataList  = os.listdir(dataDirectory)
 
     output = []
 
+    # for each data file
     for dataFile in dataList:
-        # Why this?
         minDist = float("inf")
         result  = "None"
-        for classFile in classList:
-            distance = normalizedCompressedDistance("classes", classFile,
-                "data", dataFile)
 
+        # Determine the distance from the data files to the class files
+        for classFile in classList:
+            distance = normalizedCompressedDistance(classDirectory, classFile,
+                dataDirectory, dataFile)
+
+            # Set the distance is shorter then previous ones, set it as the
+            #  shortest distance
             if distance < minDist:
                 minDist = distance
-                result = classFile
+                result  = classFile
 
+        # The above is the verbose syntax; below is the non-verbose version
         if "-v" in sys.argv:
-            #print("" + dataFile + "  matches " + result + " by a" \
-            #    + " distance of " + distance)
-            #print("{} matches {} by a distance of {:.2f}".format(
-            #    dataFile, result, distance))
             output.append("{} matches {} by a distance of {:.2f}".format(
                 dataFile, result, distance))
         else:
-            output.append("{}: {}, {:.2f}".format(dataFile, result, distance))
-            #output.append(dataFile + ": " + result + " " + distance)
+            output.append("{} {} {:.2f}".format(dataFile, result, distance))
 
     for string in output:
         print string
-
-
-
-
-
-    #print(normalizedCompressedDistance("classes", "omg.txt", \
-    #    "data", "omg2.txt"))
 

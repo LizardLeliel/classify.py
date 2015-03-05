@@ -8,7 +8,7 @@ This program requires these conditions to run: <br>
 - You have gzip.exe in the same directory as the program <br>
 - You have the directories temp, classes, and data in the same directory
 as the program <br>
-- And preferably, you have unique types in \classes (i.e only one jpeg, one txt file, etc..),
+- And preferably, you have unique file types in \classes (i.e only one jpeg, one txt file, etc..),
 and numerous different files in the data \data
 
 What the heck does this program do?!?
