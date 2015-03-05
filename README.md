@@ -1,9 +1,18 @@
 winclassify.py
 ==============
 
-...it does classifying, on windows.
+Requisites
+----------
+This program requires these conditions to run: <br>
+- You are on windows (linux support expected to be soon) <br>
+- You have gzip.exe in the same directory as the program <br>
+- You have the directories temp, classes, and data in the same directory
+as the program <br>
+- And preferably, you have unique types in \classes (i.e only one jpeg, one txt file, etc..),
+and numerous different files in the data \data
 
-More information to come. This isn't suposed to be a large project.
+What the heck does this program do?!?
+-------------------------------------
+It tries to match the files in \data to files in \classes.
 
-If for whatever reasons you're going to try this, realize that... It doesn't do anything yet,
-and even then, it'll need gzip.exe in the directory of the program. For reasons
+It uses information distance to acheive this
