@@ -2,11 +2,11 @@
 import subprocess as subp
 import os
 import sys
+from osCommands.py import *
 
-# Return the file's size
-def fileSize(fileName):
-    record = os.stat(fileName)
-    return record.st_size
+# Note: Useful function:
+#  -os.path.isdir("hello")
+
 
 # Make a compressed file into the directory of \temp
 #  Using the gzip compressor; then returns the size of
@@ -134,4 +134,3 @@ if __name__ == "__main__":
 
     for string in output:
         print string
-
